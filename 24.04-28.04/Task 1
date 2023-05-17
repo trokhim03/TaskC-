@@ -1,1 +1,84 @@
+#include <iostream>
 
+class FlightBooking {
+public:
+    FlightBooking(int id, int capacity, int reserved);
+    void printStatus();
+    bool reserveSeats(int number_ob_seats);
+    bool cancelReservations(int number_ob_seats);
+
+private:
+    int id;
+    int capacity;
+    int reserved;
+};
+
+FlightBooking::FlightBooking(int id, int capacity, int reserved) {
+    this->id = id;
+    this->capacity = capacity;
+    this->reserved = reserved;
+
+    // Limit the initial reserved seats to the total capacity
+    if (this->reserved > this->capacity)
+        this->reserved = this->capacity;
+}
+
+void FlightBooking::printStatus() {
+    double percentage = static_cast<double>(reserved) / capacity * 100;
+    std::cout << "Flight " << id << " : " << reserved << "/" << capacity
+              << " (" << percentage << "%) seats reserved" << std::endl;
+}
+
+bool FlightBooking::reserveSeats(int number_ob_seats) {
+    int newReserved = reserved + number_ob_seats;
+    double maxCapacity = capacity * 1.05;
+
+    // Check if the reservation exceeds the allowed limit
+    if (newReserved > maxCapacity)
+        return false;
+
+    reserved = newReserved;
+    return true;
+}
+
+bool FlightBooking::cancelReservations(int number_ob_seats) {
+    int newReserved = reserved - number_ob_seats;
+
+    // Check if the cancellation results in negative reservations
+    if (newReserved < 0)
+        return false;
+
+    reserved = newReserved;
+    return true;
+}
+
+int main() {
+    int reserved = 0,
+        capacity = 0;
+    std::cout << "Provide flight capacity: ";
+    std::cin >> capacity;
+    std::cout << "Provide number of reserved seats: ";
+    std::cin >> reserved;
+    FlightBooking booking(1, capacity, reserved);
+    std::cin.ignore(); // Ignore the newline character left in the input stream
+
+    std::string command;
+    while (command != "quit") {
+        booking.printStatus();
+        std::cout << "What would you like to do?: ";
+        std::getline(std::cin, command);
+
+        // Parse the command and perform the corresponding action
+        if (command.find("add") == 0) {
+            int numSeats = std::stoi(command.substr(4));
+            if (!booking.reserveSeats(numSeats))
+                std::cout << "Cannot perform this operation" << std::endl;
+        } else if (command.find("cancel") == 0) {
+            int numSeats = std::stoi(command.substr(7));
+            if (!booking.cancelReservations(numSeats))
+                std::cout << "Cannot perform this operation" << std::endl;
+        }
+    }
+
+    return 0;
+}
