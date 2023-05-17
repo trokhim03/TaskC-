@@ -1,1 +1,109 @@
+#include <iostream>
+#include <string>
 
+class FlightBooking {
+public:
+    FlightBooking(int id, int capacity, int reserved);
+    FlightBooking();
+    void printStatus();
+    bool reserveSeats(int number_of_seats);
+    bool cancelReservations(int number_of_seats);
+    int getId() { return id; }
+private:
+    int id;
+    int capacity;
+    int reserved;
+};
+
+FlightBooking::FlightBooking()
+{
+    id = 0; capacity = 0; reserved = 0;
+}
+
+FlightBooking::FlightBooking(int id, int capacity, int reserved)
+{
+    this->id = id;
+    this->capacity = capacity;
+    this->reserved = reserved;
+}
+
+void FlightBooking::printStatus()
+{
+    double percentage = (static_cast<double>(reserved) / capacity) * 100;
+    std::cout << "Flight " << id << " : " << reserved << "/" << capacity << " (" << percentage << "%) seats reserved" << std::endl;
+}
+
+bool FlightBooking::reserveSeats(int number_of_seats)
+{
+    if (reserved + number_of_seats <= capacity)
+    {
+        reserved += number_of_seats;
+        return true;
+    }
+    else
+    {
+        std::cout << "Cannot perform this operation: Not enough available seats" << std::endl;
+        return false;
+    }
+}
+
+bool FlightBooking::cancelReservations(int number_of_seats)
+{
+    if (reserved - number_of_seats >= 0)
+    {
+        reserved -= number_of_seats;
+        return true;
+    }
+    else
+    {
+        std::cout << "Cannot perform this operation: Not enough reserved seats to cancel" << std::endl;
+        return false;
+    }
+}
+
+int main() {
+    const int MAX_FLIGHTS = 10;
+    FlightBooking booking[MAX_FLIGHTS];
+
+    std::string command = "";
+    while (command != "quit")
+    {
+        std::cout << "What would you like to do?: ";
+        std::getline(std::cin, command);
+
+        // Parse the command
+        std::string operation;
+        int flightId, capacity, quantity;
+        sscanf(command.c_str(), "%s %d %d", &operation, &flightId, &quantity);
+
+        if (operation == "create")
+        {
+            if (flightId > 0 && flightId <= MAX_FLIGHTS && booking[flightId - 1].getId() == 0)
+            {
+                booking[flightId - 1] = FlightBooking(flightId, quantity, 0);
+                booking[flightId - 1].printStatus();
+            }
+            else
+            {
+                std::cout << "Cannot perform this operation: Invalid flight ID or flight already exists" << std::endl;
+            }
+        }
+        else if (operation == "delete")
+        {
+            if (flightId > 0 && flightId <= MAX_FLIGHTS && booking[flightId - 1].getId() != 0)
+            {
+                booking[flightId - 1] = FlightBooking();
+                booking[flightId - 1].printStatus();
+            }
+            else
+            {
+                std::cout << "Cannot perform this operation: Flight not found" << std::endl;
+            }
+        }
+        else if (operation == "add")
+        {
+            if (flightId > 0 && flightId <= MAX_FLIGHTS && booking[flightId - 1].getId() != 0)
+            {
+                if (booking[flightId - 1].reserveSeats(quantity))
+                {
+                    booking[flightId - 1].print
