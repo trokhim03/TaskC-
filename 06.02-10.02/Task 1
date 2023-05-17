@@ -1,1 +1,73 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 
+const int SIZE = 3; // розмір двовимірного масиву
+
+void fillArray(int* arr, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            *(arr + i * size + j) = rand() % 10; // заповнення масиву випадковими значеннями
+        }
+    }
+}
+
+void printDiagonal(int* arr, int size, bool mainDiagonal)
+{
+    std::cout << "Diagonal elements: ";
+    if (mainDiagonal)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            std::cout << *(arr + i * size + i) << " ";
+        }
+    }
+    else
+    {
+        for (int i = 0; i < size; i++)
+        {
+            std::cout << *(arr + i * size + (size - 1 - i)) << " ";
+        }
+    }
+    std::cout << std::endl;
+}
+
+void countEvenOdd(int* arr, int size)
+{
+    int evenCount = 0;
+    int oddCount = 0;
+    
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (*(arr + i * size + j) % 2 == 0)
+                evenCount++;
+            else
+                oddCount++;
+        }
+    }
+    
+    std::cout << "Even elements: " << evenCount << std::endl;
+    std::cout << "Odd elements: " << oddCount << std::endl;
+}
+
+int main()
+{
+    srand(static_cast<unsigned int>(time(0))); // ініціалізація генератора випадкових чисел
+    
+    int array[SIZE][SIZE];
+    int* ptr = &array[0][0]; // вказівник на початок масиву
+    
+    fillArray(ptr, SIZE);
+    
+    printDiagonal(ptr, SIZE, true); // виведення головної діагоналі
+    printDiagonal(ptr, SIZE, false); // виведення побічної діагоналі
+    
+    countEvenOdd(ptr, SIZE); // підрахунок парних та непарних елементів
+    
+    return 0;
+}
