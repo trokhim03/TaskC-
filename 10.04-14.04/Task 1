@@ -1,1 +1,30 @@
+#include <iostream>
+#include <string>
+using namespace std;
 
+class Person
+{
+public:
+    string name;
+    int age;
+    string occupation; // Added member variable
+
+    void print() // Added member function
+    {
+        cout << name << " is " << age << " years old." << endl;
+        cout << "Occupation: " << occupation << endl;
+    }
+};
+
+int main()
+{
+    Person person;
+    person.name = "Harry";
+    person.age = 23;
+    person.occupation = "Engineer"; // Assigning a value to the new member variable
+
+    cout << "Meet " << person.name << endl; // Fixed syntax error
+    person.print(); // Calling the print() member function
+
+    return 0;
+}
