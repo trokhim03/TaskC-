@@ -1,1 +1,65 @@
+#include <iostream>
+#include <ctime>
 
+struct Date {
+    int year;
+    int month;
+    int day;
+};
+
+bool isLeap(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+int monthLength(int year, int month) {
+    const int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    return (month == 2 && isLeap(year)) ? 29 : daysInMonth[month - 1];
+}
+
+Date today() {
+    time_t currentTime = time(NULL);
+    tm* localTime = localtime(&currentTime);
+
+    Date currentDate;
+    currentDate.year = localTime->tm_year + 1900;
+    currentDate.month = localTime->tm_mon + 1;
+    currentDate.day = localTime->tm_mday;
+
+    return currentDate;
+}
+
+int countDays(Date startDate, Date endDate) {
+    int days = 0;
+    
+    while (startDate.year < endDate.year || startDate.month < endDate.month || startDate.day < endDate.day) {
+        days++;
+        startDate.day++;
+        
+        if (startDate.day > monthLength(startDate.year, startDate.month)) {
+            startDate.day = 1;
+            startDate.month++;
+            
+            if (startDate.month > 12) {
+                startDate.month = 1;
+                startDate.year++;
+            }
+        }
+    }
+    
+    return days;
+}
+
+int main() {
+    Date birthday;
+    birthday.year = 2003;
+    birthday.month = 10;
+    birthday.day = 26;
+    
+    Date currentDate = today();
+    
+    int daysPassed = countDays(birthday, currentDate);
+    
+    std::cout << "Кількість днів, що пройшли від вашого дня народження до поточної дати: " << daysPassed << std::endl;
+    
+    return 0;
+}
