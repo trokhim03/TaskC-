@@ -1,1 +1,61 @@
+#include <iostream>
+#include <string>
+#include <unordered_map>
+
+int main()
+{
+    std::string values;
+    std::getline(std::cin, values);
+    std::string templateText;
+    std::getline(std::cin, templateText);
+
+    std::unordered_map<std::string, std::string> valueMap;
+
+    // Parse the name-value pairs from the input
+    size_t pos = 0;
+    while (pos != std::string::npos)
+    {
+        size_t equalPos = values.find('=', pos);
+        if (equalPos == std::string::npos)
+            break;
+
+        std::string name = values.substr(pos, equalPos - pos);
+        pos = equalPos + 1;
+
+        size_t commaPos = values.find(',', pos);
+        std::string value = values.substr(pos, commaPos - pos);
+        pos = commaPos != std::string::npos ? commaPos + 1 : commaPos;
+
+        valueMap[name] = value;
+    }
+
+    // Replace placeholders in the template with values
+    pos = 0;
+    while (pos != std::string::npos)
+    {
+        size_t openBracket = templateText.find('[', pos);
+        if (openBracket == std::string::npos)
+            break;
+
+        size_t closeBracket = templateText.find(']', openBracket);
+        if (closeBracket == std::string::npos)
+            break;
+
+        std::string placeholder = templateText.substr(openBracket + 1, closeBracket - openBracket - 1);
+        auto it = valueMap.find(placeholder);
+        if (it != valueMap.end())
+        {
+            templateText.replace(openBracket, closeBracket - openBracket + 1, it->second);
+            pos = openBracket + it->second.length();
+        }
+        else
+        {
+            pos = closeBracket + 1;
+        }
+    }
+
+    std::cout << templateText << "\n";
+
+    return 0;
+}
 
