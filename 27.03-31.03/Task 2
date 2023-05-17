@@ -1,1 +1,56 @@
+#include <iostream>
+#include <string>
+#include <cctype>
 
+bool validatePassword(const std::string& password) {
+    // Check length
+    if (password.length() < 8) {
+        std::cout << "The password must be 8 characters long" << std::endl;
+        return false;
+    }
+
+    bool hasUpperCase = false;
+    bool hasLowerCase = false;
+    bool hasDigit = false;
+    bool hasSpecialChar = false;
+
+    // Check each character
+    for (char c : password) {
+        if (isupper(c)) {
+            hasUpperCase = true;
+        } else if (islower(c)) {
+            hasLowerCase = true;
+        } else if (isdigit(c)) {
+            hasDigit = true;
+        } else {
+            hasSpecialChar = true;
+        }
+    }
+
+    // Check requirements
+    if (!hasUpperCase) {
+        std::cout << "The password must have at least one upper case letter" << std::endl;
+    }
+    if (!hasLowerCase) {
+        std::cout << "The password must have at least one lower case letter" << std::endl;
+    }
+    if (!hasDigit) {
+        std::cout << "The password must have at least one digit" << std::endl;
+    }
+    if (!hasSpecialChar) {
+        std::cout << "The password must have at least one special character" << std::endl;
+    }
+
+    return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar;
+}
+
+int main() {
+    std::string password;
+    std::getline(std::cin, password);
+
+    if (validatePassword(password)) {
+        std::cout << "The password is valid" << std::endl;
+    }
+
+    return 0;
+}
