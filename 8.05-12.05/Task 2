@@ -1,1 +1,50 @@
+#include <iostream>
+#include <string>
 
+class IPAddress {
+protected:
+    std::string address;
+
+public:
+    IPAddress(const std::string& addr) : address(addr) {}
+    IPAddress(const IPAddress& other) : address(other.address) {}
+
+    virtual void print() const {
+        std::cout << address << std::endl;
+    }
+};
+
+class IPAddressChecked : public IPAddress {
+private:
+    bool isCorrect;
+
+public:
+    IPAddressChecked(const std::string& addr, bool correct)
+        : IPAddress(addr), isCorrect(correct) {}
+
+    IPAddressChecked(const IPAddressChecked& other)
+        : IPAddress(other), isCorrect(other.isCorrect) {}
+
+    void print() const override {
+        IPAddress::print();
+        std::cout << (isCorrect ? " - Correct" : " - Not Correct") << std::endl;
+    }
+};
+
+int main() {
+    std::string addr1, addr2, addr3;
+
+    std::cout << "Enter three IP addresses:" << std::endl;
+    std::cin >> addr1 >> addr2 >> addr3;
+
+    IPAddress ipAddr(addr1);
+    IPAddressChecked ipAddrChecked1(addr2, false);
+    IPAddressChecked ipAddrChecked2(addr3, true);
+
+    std::cout << "Printing IP addresses:" << std::endl;
+    ipAddr.print();
+    ipAddrChecked1.print();
+    ipAddrChecked2.print();
+
+    return 0;
+}
