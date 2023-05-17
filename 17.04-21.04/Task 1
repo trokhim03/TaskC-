@@ -1,1 +1,60 @@
+#include <iostream>
+#include <string>
 
+class ShopItemOrder {
+private:
+    std::string itemName;
+    double unitPrice;
+    int quantity;
+
+public:
+    // Constructor
+    ShopItemOrder(const std::string& name, double price, int quantity)
+        : itemName(name), unitPrice(price), quantity(quantity) {}
+
+    // Getter and setter for item name
+    std::string getItemName() const {
+        return itemName;
+    }
+    void setItemName(const std::string& name) {
+        itemName = name;
+    }
+
+    // Getter and setter for unit price
+    double getUnitPrice() const {
+        return unitPrice;
+    }
+    void setUnitPrice(double price) {
+        unitPrice = price;
+    }
+
+    // Getter and setter for quantity
+    int getQuantity() const {
+        return quantity;
+    }
+    void setQuantity(int qty) {
+        quantity = qty;
+    }
+
+    // Calculate total price for the order
+    double getTotalPrice() const {
+        return unitPrice * quantity;
+    }
+
+    // Print the order in a user-friendly way
+    void printOrder() const {
+        std::cout << "Order Details:" << std::endl;
+        std::cout << "Item: " << itemName << std::endl;
+        std::cout << "Unit Price: $" << unitPrice << std::endl;
+        std::cout << "Quantity: " << quantity << std::endl;
+        std::cout << "Total Price: $" << getTotalPrice() << std::endl;
+    }
+};
+
+int main() {
+    // Example usage
+    ShopItemOrder order("Example Item", 10.99, 3);
+    order.printOrder();
+
+    return 0;
+}
